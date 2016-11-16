@@ -2,13 +2,101 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hudson Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
-    <link rel="stylesheet" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
-    <script type="text/javascript" src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js" charset="utf-8"></script>
-    <!-- start Mixpanel --><script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
-      for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);</script><!-- end Mixpanel -->
-  <body class="mixpanel-platform-body amazonia-body">
-    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+    <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+    <link rel="stylesheet" href="jquery/jquery-ui.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="jquery/external/jquery/jquery.js"></script>
+    <script src="jquery/jquery-ui.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="underscore-min.js"></script>
+    <script src="moment.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="mp_lib.js"></script>
+    <script src="index.js"></script>
+    <title>Mixpanel Dashboard</title>
+  </head>
+  <body>
+    <div id="reportBody">
+      <div class="display" id="title">
+        <div class="displayText" id="titletext">Mixpanel Dashboard</div>
+      </div>
+      <div class="display" id="addReport">
+        <div class="displayText" id="addReportText">Add Report</div>
+      </div>
+      <div class="display" id="saveDash">
+        <div class="displayText" id="saveDashText">Save</div>
+      </div>
+      <div id="dataBlock">
+        <div class="dates">
+          <div class="displayDate display" id="fromDate" value=""><div class="dateText displayText" id="fromDateText"></div></div>
+          <div class="displayDate display" id="toDate" value=""><div class="dateText displayText" id="toDateText"></div></div>
+        </div>
+        <div class="datePicker">
+          <input type="button" id="fromDatePicker">
+        </div>
+          <div class="datePicker">
+          <input type="button" id="toDatePicker">
+        </div>
+      </div>
+      <div id="modal">
+        <div class="modalElement">
+          <img class="modalImage" id="lineImage" src="images/chart.png"/>
+          <div class="modalDisplay" id="createSeg">
+            <div class="displayText">Segmentation</div>
+          </div>
+        </div>
+        <div class="modalElement">
+          <img class="modalImage" id="funnelImage" src="images/funnel.png"/>
+          <div class="modalDisplay" id="createFun">
+            <div class="displayText" >Funnels</div>
+          </div>
+        </div>
+        <div class="modalElement">
+          <img class="modalImage" id="retImage" src="images/retention.png"/>
+          <div class="modalDisplay" id="createRet">
+            <div class="displayText">Retention</div>
+          </div>
+        </div>
+        <div class="modalBuilder" id="segBuilder">
+          <div class="styled-select eventSelector">
+             <select id="eventOptions">
+                <option selected="selected">Loading...</option>
+             </select>
+          </div>
+          <div class="styled-select segSelector">
+            <div id="by"><div id="byText">BY</div></div>
+            <div id="propertyFilter">
+               <select id="propOptions">
+                  <option selected="selected" value="placeholder">Loading...</option>
+               </select>
+            </div>
+            <div class="toggleSelector">
+              <div class="toggle toggleBox-selected chartType" value="line">Line</div>
+              <div class="toggle toggleBox chartType" value="column">Bar</div>
+            </div>
+            <div class="toggleSelector" id="uniqueTotal">
+              <div class="toggle toggleBox-selected queryType" value="general">Total</div>
+              <div class="toggle toggleBox queryType" value="unique">Unique</div>
+            </div>
+            <input type="text" name="textfield" class="textField" placeholder="Report name" />
+            <div class="query" id="runQuery">SHOW</div>
+          </div>
+        </div>
+        <div class="modalBuilder" id="funnelBuilder">
+          <div class="styled-select funnelSelector">
+             <select id="funnelOptions">
+                <option selected="selected">Search Saved Funnels</option>
+             </select>
+             <div class="query" id="buildFunnel">Build</div>
+          </div>
+        </div>
+        <div class="modalBuilder" id="bookmarksBuilder">
+          <div id="comingSoon">Coming Soon!<sup style="font-size:9px;">TM</sup></div>
+        </div>
+      </div>
+      <div id="dashboard"></div>
+    </div>
+    <div id="overlay"></div>
   </body>
 </html>
